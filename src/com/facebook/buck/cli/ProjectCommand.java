@@ -126,7 +126,8 @@ public class ProjectCommand extends BuildCommand {
 
   public enum Ide {
     INTELLIJ,
-    XCODE;
+    XCODE,
+    ECLIPSE;
 
     public static Ide fromString(String string) {
       switch (Ascii.toLowerCase(string)) {
@@ -134,6 +135,8 @@ public class ProjectCommand extends BuildCommand {
           return Ide.INTELLIJ;
         case "xcode":
           return Ide.XCODE;
+        case "eclipse":
+          return Ide.ECLIPSE;
         default:
           throw new HumanReadableException("Invalid ide value %s.", string);
       }
@@ -409,9 +412,15 @@ public class ProjectCommand extends BuildCommand {
               targetGraphAndTargets,
               passedInTargetsSet);
           break;
+        case ECLIPSE:
+          result = runEclipseProjectGenerator(
+              params,
+              targetGraphAndTargets,
+              passedInTargetsSet);
+          break;
         default:
           // unreachable
-          throw new IllegalStateException("'ide' should always be of type 'INTELLIJ' or 'XCODE'");
+          throw new IllegalStateException("'ide' should always be of type 'INTELLIJ', 'XCODE' or 'ECLIPSE'");
       }
     } finally {
       params.getBuckEventBus().post(ProjectGenerationEvent.finished());
@@ -908,4 +917,12 @@ public class ProjectCommand extends BuildCommand {
     return "generates project configuration files for an IDE";
   }
 
+  int runEclipseProjectGenerator(
+      final CommandRunnerParams params,
+      final TargetGraphAndTargets targetGraphAndTargets,
+      ImmutableSet<BuildTarget> passedInTargetsSet)
+      throws IOException, InterruptedException {
+    // TODO
+    return 0;
+  }
 }
